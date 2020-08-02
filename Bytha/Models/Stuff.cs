@@ -1,9 +1,9 @@
 using Bytha.Models;
 using System;
 using System.Collections.Generic;
-namespace Bytha
+namespace Bytha.Models
 {
-    public class Item
+    public class Stuff
     {
         public Guid Id { get; set; }
 

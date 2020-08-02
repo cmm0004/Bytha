@@ -1,13 +1,13 @@
+using Bytha.Repositories;
 using HotChocolate;
 using HotChocolate.AspNetCore;
+using HotChocolate.AspNetCore.Voyager;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Neo4j.Driver;
-using Neo4jClient;
-using System;
 
 namespace Bytha
 {
@@ -26,17 +26,14 @@ namespace Bytha
             services.AddControllers();
             services.AddGraphQL(
                 SchemaBuilder.New()
-                .AddQueryType<Query>());
+                .AddQueryType(d => d.Name("Query"))
+                .AddType<RoomQueries>());
             services.AddSingleton<IDriver>(x =>
             {
                 return GraphDatabase.Driver("neo4j://localhost:7687", AuthTokens.Basic("neo4j", "test"));
             });
-            //services.AddSingleton<IGraphClient, GraphClient>(x =>
-            //{
-            //    var graphClient = new GraphClient(new Uri("http://neo4j:test@localhost:7474/db/data"));
-            //    graphClient.Connect();
-            //    return graphClient;
-            //});
+            services.AddSingleton<IRoomRepository, RoomRepository>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,10 +46,11 @@ namespace Bytha
 
             //app.UseHttpsRedirection();
 
-            app.UseRouting()
+                app.UseRouting()
                 .UseWebSockets()
                 .UseGraphQL()
-                .UsePlayground();
+                .UsePlayground()
+                .UseVoyager();
 
             //app.UseAuthorization();
 
