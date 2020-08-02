@@ -1,3 +1,4 @@
+using Bytha.Query;
 using Bytha.Repositories;
 using HotChocolate;
 using HotChocolate.AspNetCore;
@@ -24,6 +25,7 @@ namespace Bytha
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddDataLoaderRegistry();
             services.AddGraphQL(
                 SchemaBuilder.New()
                 .AddQueryType(d => d.Name("Query"))
